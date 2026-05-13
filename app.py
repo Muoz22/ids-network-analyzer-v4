@@ -888,10 +888,17 @@ with tab4:
                     "🔮 جاري تحليل الـ Log..."):
 
                 try:
-                    import sys
-                    sys.path.insert(0, "v4/")
-                    from v4.log_parser_v4 import \
-                        UniversalLogParser
+                    import sys, importlib.util
+                    sys.path.insert(0, ".")
+                    spec = importlib.util\
+                        .spec_from_file_location(
+                        "log_parser_v4",
+                        "v4/log_parser_v4.py")
+                    _lp = importlib.util\
+                        .module_from_spec(spec)
+                    spec.loader.exec_module(_lp)
+                    UniversalLogParser = \
+                        _lp.UniversalLogParser
 
                     # ── Step 1: Parse ──────────
                     status.text(
