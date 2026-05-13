@@ -39,68 +39,10 @@ TAXONOMY = {
             "dos","DoS",
             "DoS-SYN_Flood","DoS-UDP_Flood",
             "DoS-TCP_Flood","DoS-HTTP_Flood",
+            "DoS",
         ]
     },
-    "recon": {
-    "level1" : "attack",
-    "level2" : "recon",
-    "labels" : [
-        "scanning","Reconnaissance",
-        "Recon-PortScan","Recon-OSScan",
-        "Recon-PingSweep","Recon-HostDiscovery",
-        "VulnerabilityScan","Service_Scan",
-        "OS_Fingerprint",
-        "Reconnaissance",  # ← UNSW
-    ]
-},
 
-"dos": {
-    "level1" : "attack",
-    "level2" : "dos",
-    "labels" : [
-        "dos","DoS",
-        "DoS-SYN_Flood","DoS-UDP_Flood",
-        "DoS-TCP_Flood","DoS-HTTP_Flood",
-        "DoS",           # ← UNSW
-    ]
-},
-
-"web_attack": {
-    "level1" : "attack",
-    "level2" : "web_attack",
-    "labels" : [
-        "xss","XSS","injection",
-        "SQL Injection","CommandInjection",
-        "FileUpload","LDAP Injection",
-        "Exploits",      # ← UNSW
-        "Generic",       # ← UNSW
-        "Fuzzers",       # ← UNSW
-    ]
-},
-
-"credential": {
-    "level1" : "attack",
-    "level2" : "credential",
-    "labels" : [
-        "password","Password",
-        "DictionaryBruteForce",
-        "BruteForce","bruteforce",
-        "Brute Force",   # ← UNSW
-    ]
-},
-
-"exfiltration": {
-    "level1" : "attack",
-    "level2" : "exfiltration",
-    "labels" : [
-        "Theft","Data_Exfiltration",
-        "Keylogging","exfiltration",
-        "Analysis",      # ← UNSW
-        "Backdoors",     # ← UNSW (مختلف عن backdoor)
-        "Shellcode",     # ← UNSW
-        "Worms",         # ← UNSW
-    ]
-},
     "recon": {
         "level1" : "attack",
         "level2" : "recon",
@@ -120,6 +62,9 @@ TAXONOMY = {
             "xss","XSS","injection",
             "SQL Injection","CommandInjection",
             "FileUpload","LDAP Injection",
+            "Exploits",
+            "Generic",
+            "Fuzzers",
         ]
     },
 
@@ -129,7 +74,9 @@ TAXONOMY = {
         "labels" : [
             "backdoor","Backdoor",
             "ransomware","Ransomware",
-            "Trojan","Worm","Shellcode",
+            "Trojan","Worm",
+            "Shellcode",
+            "Worms",
         ]
     },
 
@@ -151,6 +98,7 @@ TAXONOMY = {
             "password","Password",
             "DictionaryBruteForce",
             "BruteForce","bruteforce",
+            "Brute Force",
         ]
     },
 
@@ -170,6 +118,9 @@ TAXONOMY = {
         "labels" : [
             "Theft","Data_Exfiltration",
             "Keylogging","exfiltration",
+            "Analysis",
+            "Backdoors",
+            "Shellcode",
         ]
     },
 
@@ -225,9 +176,12 @@ def is_benign(label: str) -> bool:
 
 if __name__ == "__main__":
     tests = [
-        "DDoS-UDP_Flood", "normal",
-        "Mirai-greip_flood", "scanning",
-        "XSS", "BenignTraffic", "NEW_ATTACK"]
+        "DDoS-UDP_Flood","normal",
+        "Mirai-greip_flood","scanning",
+        "XSS","BenignTraffic","NEW_ATTACK",
+        "Exploits","Fuzzers","DoS",
+        "Reconnaissance","Backdoor",
+        "Brute Force","Analysis",]
     print(f"{'Label':<30} {'L1':<10} {'L2'}")
     print("-" * 55)
     for t in tests:
