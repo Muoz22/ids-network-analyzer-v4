@@ -41,7 +41,66 @@ TAXONOMY = {
             "DoS-TCP_Flood","DoS-HTTP_Flood",
         ]
     },
+    "recon": {
+    "level1" : "attack",
+    "level2" : "recon",
+    "labels" : [
+        "scanning","Reconnaissance",
+        "Recon-PortScan","Recon-OSScan",
+        "Recon-PingSweep","Recon-HostDiscovery",
+        "VulnerabilityScan","Service_Scan",
+        "OS_Fingerprint",
+        "Reconnaissance",  # ← UNSW
+    ]
+},
 
+"dos": {
+    "level1" : "attack",
+    "level2" : "dos",
+    "labels" : [
+        "dos","DoS",
+        "DoS-SYN_Flood","DoS-UDP_Flood",
+        "DoS-TCP_Flood","DoS-HTTP_Flood",
+        "DoS",           # ← UNSW
+    ]
+},
+
+"web_attack": {
+    "level1" : "attack",
+    "level2" : "web_attack",
+    "labels" : [
+        "xss","XSS","injection",
+        "SQL Injection","CommandInjection",
+        "FileUpload","LDAP Injection",
+        "Exploits",      # ← UNSW
+        "Generic",       # ← UNSW
+        "Fuzzers",       # ← UNSW
+    ]
+},
+
+"credential": {
+    "level1" : "attack",
+    "level2" : "credential",
+    "labels" : [
+        "password","Password",
+        "DictionaryBruteForce",
+        "BruteForce","bruteforce",
+        "Brute Force",   # ← UNSW
+    ]
+},
+
+"exfiltration": {
+    "level1" : "attack",
+    "level2" : "exfiltration",
+    "labels" : [
+        "Theft","Data_Exfiltration",
+        "Keylogging","exfiltration",
+        "Analysis",      # ← UNSW
+        "Backdoors",     # ← UNSW (مختلف عن backdoor)
+        "Shellcode",     # ← UNSW
+        "Worms",         # ← UNSW
+    ]
+},
     "recon": {
         "level1" : "attack",
         "level2" : "recon",
