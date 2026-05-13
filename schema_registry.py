@@ -153,7 +153,8 @@ def detect_dataset(df) -> str:
             "dbytes","category","dur"},
         "BOT_IOT"   : {
             "saddr","daddr","category",
-            "subcategory","pkts"},
+            "subcategory","pkseqid",
+            "spkts","dpkts","sbytes"},
         "CICIDS2017": {
             "source ip","destination ip",
             "flow duration","total fwd packets"},
