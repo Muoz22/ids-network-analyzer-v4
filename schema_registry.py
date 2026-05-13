@@ -3,7 +3,6 @@
 # Dataset Schema Mappings — No Hardcoding
 # ================================================================
 
-# ── Normalized Schema (الـ target لكل داتاست) ────────────────
 NORMALIZED_SCHEMA = {
     "src_ip"           : str,
     "dst_ip"           : str,
@@ -22,7 +21,6 @@ NORMALIZED_SCHEMA = {
     "label"            : str,
 }
 
-# ── Dataset Schemas ───────────────────────────────────────────
 DATASET_SCHEMAS = {
 
     "TON_IOT": {
@@ -39,7 +37,7 @@ DATASET_SCHEMAS = {
         "dst_pkts"         : "dst_pkts",
         "tcp_flags"        : None,
         "payload_size"     : "src_bytes",
-        "connection_state" : "state",
+        "connection_state" : "conn_state",
         "label"            : "type",
         "benign_label"     : "normal",
     },
@@ -47,15 +45,17 @@ DATASET_SCHEMAS = {
     "CIC_IOT": {
         "src_ip"           : None,
         "dst_ip"           : None,
-        "src_port"         : "src_port",
-        "dst_port"         : "dst_port",
+        "src_port"         : None,
+        "dst_port"         : None,
         "protocol"         : "Protocol Type",
         "timestamp"        : None,
         "duration"         : "flow_duration",
-        "src_bytes"        : "src_bytes",
-        "dst_bytes"        : "dst_bytes",
-        "src_pkts"         : "src_pkts",
-        "dst_pkts"         : "dst_pkts",
+        # Srate/Drate كـ proxy لـ src/dst bytes
+        "src_bytes"        : "Srate",
+        "dst_bytes"        : "Drate",
+        # Rate كـ proxy لـ packets
+        "src_pkts"         : "Rate",
+        "dst_pkts"         : "Drate",
         "tcp_flags"        : "fin_flag_number",
         "payload_size"     : "Header_Length",
         "connection_state" : None,
@@ -120,9 +120,7 @@ DATASET_SCHEMAS = {
         "benign_label"     : "BENIGN",
     },
 
-    # ── Generic fallback ──────────────────────────────────
     "AUTO": {
-        # يُكمَل تلقائياً بواسطة universal_parser
         "label"        : None,
         "benign_label" : None,
     },
@@ -141,26 +139,33 @@ def detect_dataset(df) -> str:
     يكتشف نوع الداتاست تلقائياً
     من خلال أسماء الأعمدة
     """
-    cols = set(df.columns.str.lower())
+    cols_lower = {c.lower() for c in df.columns}
 
     signatures = {
-        "TON_IOT"   : {"saddr","daddr","proto","type"},
-        "CIC_IOT"   : {"label","header_length",
-                       "protocol type"},
-        "UNSW_NB15" : {"srcip","dstip","sbytes",
-                       "dbytes","category"},
-        "BOT_IOT"   : {"saddr","daddr","category",
-                       "subcategory"},
-        "CICIDS2017": {"source ip","destination ip",
-                       "flow duration"},
+        "TON_IOT"   : {
+            "saddr","daddr","proto","type",
+            "src_pkts","dst_pkts"},
+        "CIC_IOT"   : {
+            "label","header_length",
+            "protocol type","flow_duration",
+            "srate","drate"},
+        "UNSW_NB15" : {
+            "srcip","dstip","sbytes",
+            "dbytes","category","dur"},
+        "BOT_IOT"   : {
+            "saddr","daddr","category",
+            "subcategory","pkts"},
+        "CICIDS2017": {
+            "source ip","destination ip",
+            "flow duration","total fwd packets"},
     }
 
-    best_match  = "AUTO"
-    best_score  = 0
+    best_match = "AUTO"
+    best_score = 0
 
     for name, sig in signatures.items():
         score = len(
-            sig & {c.lower() for c in df.columns})
+            sig & cols_lower)
         if score > best_score:
             best_score = score
             best_match = name
