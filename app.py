@@ -1349,18 +1349,19 @@ with tab4:
                 st.markdown(
                     "### 🤖 تصنيف النموذج")
                 mc1,mc2,mc3 = st.columns(3)
+                n_tot = max(lr["n_total"], 1)
                 with mc1:
+                    pct = 100*lr["n_benign"]/n_tot
                     st.metric(
                         "✅ Benign",
                         f"{lr['n_benign']:,}",
-                        f"{100*lr['n_benign']/"
-                        f"max(lr['n_total'],1):.1f}%")
+                        f"{pct:.1f}%")
                 with mc2:
+                    pct = 100*lr["n_attack"]/n_tot
                     st.metric(
                         "🚫 Attack",
                         f"{lr['n_attack']:,}",
-                        f"{100*lr['n_attack']/"
-                        f"max(lr['n_total'],1):.1f}%",
+                        f"{pct:.1f}%",
                         delta_color="inverse")
                 with mc3:
                     atk_types = len(
@@ -1368,7 +1369,6 @@ with tab4:
                     st.metric(
                         "🔍 أنواع هجمات",
                         f"{atk_types}")
-
                 if lr.get("atk_counts"):
                     st.markdown(
                         "**أنواع الهجمات المكتشفة:**")
