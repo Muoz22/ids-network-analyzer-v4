@@ -92,7 +92,7 @@ st.markdown("""
 # Load Models
 # ================================================================
 
-@st.cache_resource
+@st.cache_resource(ttl=0)
 def load_models_cached():
     try:
         from inference_v4 import load_models_v4
