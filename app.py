@@ -890,10 +890,17 @@ with tab4:
                 try:
                     import sys, importlib.util
                     sys.path.insert(0, ".")
+                    # ابحث عن الملف في مكانين
+                    import os
+                    _lp_path = (
+                        "v4/log_parser_v4.py"
+                        if os.path.exists(
+                            "v4/log_parser_v4.py")
+                        else "log_parser_v4.py")
                     spec = importlib.util\
                         .spec_from_file_location(
                         "log_parser_v4",
-                        "v4/log_parser_v4.py")
+                        _lp_path)
                     _lp = importlib.util\
                         .module_from_spec(spec)
                     spec.loader.exec_module(_lp)
