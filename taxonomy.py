@@ -1,5 +1,8 @@
-# ── كتابة taxonomy.py مباشرة ──────────────────────────────────
-taxonomy_code = '''
+# ================================================================
+# taxonomy.py — AI Agents IDS v4
+# Unified Attack Taxonomy — 2-Level Hierarchical
+# ================================================================
+
 TAXONOMY = {
     "benign": {
         "level1": "benign", "level2": "benign",
@@ -30,6 +33,9 @@ TAXONOMY = {
             "dos","DoS",
             "DoS-SYN_Flood","DoS-UDP_Flood",
             "DoS-TCP_Flood","DoS-HTTP_Flood",
+            "DoS-UDP","DoS-TCP","DoS-HTTP",
+            "DoS Hulk","DoS GoldenEye",
+            "DoS slowloris","DoS Slowhttptest",
         ]
     },
     "recon": {
@@ -39,7 +45,7 @@ TAXONOMY = {
             "Recon-PortScan","Recon-OSScan",
             "Recon-PingSweep","Recon-HostDiscovery",
             "VulnerabilityScan","Service_Scan",
-            "OS_Fingerprint",
+            "OS_Fingerprint","PortScan",
         ]
     },
     "web_attack": {
@@ -49,6 +55,10 @@ TAXONOMY = {
             "SQL Injection","CommandInjection",
             "FileUpload","LDAP Injection",
             "Exploits","Generic","Fuzzers",
+            "Heartbleed",
+            "Web Attack – Brute Force",
+            "Web Attack – XSS",
+            "Web Attack – Sql Injection",
         ]
     },
     "malware": {
@@ -64,7 +74,7 @@ TAXONOMY = {
         "labels": [
             "Mirai-greeth_flood","Mirai-greip_flood",
             "Mirai-udpplain","Mirai",
-            "IRCBot","Botnet","BotNet",
+            "IRCBot","Botnet","BotNet","Bot",
         ]
     },
     "credential": {
@@ -74,6 +84,7 @@ TAXONOMY = {
             "DictionaryBruteForce",
             "BruteForce","bruteforce",
             "Brute Force",
+            "FTP-Patator","SSH-Patator",
         ]
     },
     "mitm": {
@@ -89,6 +100,7 @@ TAXONOMY = {
             "Theft","Data_Exfiltration",
             "Keylogging","exfiltration",
             "Analysis","Backdoors","Shellcode",
+            "Infiltration",
         ]
     },
     "unknown": {
@@ -106,53 +118,33 @@ LEVEL2_CLASSES = [k for k in TAXONOMY.keys()
                   if k != "unknown"]
 LEVEL1_CLASSES = ["benign", "attack"]
 
-def get_level1(label):
+
+def get_level1(label: str) -> str:
     cat = _LABEL_TO_CATEGORY.get(
         label.lower(), "unknown")
     return TAXONOMY[cat]["level1"]
 
-def get_level2(label):
+
+def get_level2(label: str) -> str:
     return _LABEL_TO_CATEGORY.get(
         label.lower(), "unknown")
 
-def unify_label(label):
+
+def unify_label(label: str) -> str:
     return get_level2(label)
 
-def unify_series(series):
+
+def unify_series(series) -> "pd.Series":
     import pandas as pd
     return series.apply(
         lambda x: unify_label(str(x)))
 
-def get_attack_families():
+
+def get_attack_families() -> list:
     return [k for k, v in TAXONOMY.items()
             if v["level1"] == "attack"
             and k != "unknown"]
 
-def is_benign(label):
+
+def is_benign(label: str) -> bool:
     return get_level1(label) == "benign"
-'''
-
-# اكتب الملف
-with open("/kaggle/working/taxonomy.py", "w") as f:
-    f.write(taxonomy_code)
-
-# احذف من cache
-for mod in list(sys.modules.keys()):
-    if "taxonomy" in mod:
-        del sys.modules[mod]
-
-# استيراد مباشر
-import importlib.util
-spec = importlib.util.spec_from_file_location(
-    "taxonomy", "/kaggle/working/taxonomy.py")
-tax = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(tax)
-
-# اختبار
-tests = ["Exploits","Fuzzers","Analysis",
-         "Worms","DoS","Reconnaissance",
-         "normal","DDoS-UDP_Flood"]
-print(f"{'Label':<25} {'L2'}")
-print("-" * 35)
-for t in tests:
-    print(f"{t:<25} → {tax.get_level2(t)}")
